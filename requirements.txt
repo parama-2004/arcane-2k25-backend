@@ -17,7 +17,7 @@ pypng==0.20220715.0
 PyQRCode==1.2.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
-
+gunicorn 
 qrcode==7.4.2
 
 reportlab==4.2.2
@@ -27,5 +27,6 @@ supabase==2.4.5
 supabase_auth==2.12.3
 supabase_functions==0.10.1
 supafunc==0.4.7
+
 
 
