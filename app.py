@@ -49,7 +49,7 @@ def send_otp_email(to_email, subject, body):
         msg['From'] = SMTP_EMAIL
         msg['To'] = to_email
 
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        with smtplib.SMTP("smtp-relay.brevo.com", 587) as server:
             server.starttls()
             server.login(SMTP_EMAIL, SMTP_PASS)
             server.sendmail(SMTP_EMAIL, to_email, msg.as_string())
@@ -279,7 +279,7 @@ def send_ticket_email(to_email, subject, body, attachment_bytes):
     msg.attach(part)
 
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server = smtplib.SMTP("smtp-relay.brevo.com", 587)
         server.starttls()
         server.login(SMTP_EMAIL, SMTP_PASS)
         server.sendmail(SMTP_EMAIL, to_email, msg.as_string())
