@@ -51,7 +51,7 @@ def send_otp_email(to_email, subject, body):
 
         with smtplib.SMTP("smtp-relay.brevo.com", 587) as server:
             server.starttls()
-            server.login(SMTP_EMAIL, SMTP_PASS)
+            server.login("97103a001@smtp-brevo.com", SMTP_PASS)
             server.sendmail(SMTP_EMAIL, to_email, msg.as_string())
         return True
     except Exception as e:
@@ -281,7 +281,7 @@ def send_ticket_email(to_email, subject, body, attachment_bytes):
     try:
         server = smtplib.SMTP("smtp-relay.brevo.com", 587)
         server.starttls()
-        server.login(SMTP_EMAIL, SMTP_PASS)
+        server.login("97103a001@smtp-brevo.com", SMTP_PASS)
         server.sendmail(SMTP_EMAIL, to_email, msg.as_string())
         server.quit()
         print("✅ Mail sent to", to_email)
