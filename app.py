@@ -300,3 +300,7 @@ def get_participants():
     data = query.execute()
     return jsonify({"data": data.data})
 
+
+@app.route("/health")
+def health():
+    return "OK", 200
