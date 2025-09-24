@@ -1,6 +1,6 @@
 Flask==3.0.3
 Flask-Cors==5.0.0
-
+sib-api-v3-sdk
 
 pillow==10.4.0
 platformdirs==4.3.8
@@ -27,6 +27,7 @@ supabase==2.4.5
 supabase_auth==2.12.3
 supabase_functions==0.10.1
 supafunc==0.4.7
+
 
 
 
