@@ -165,7 +165,7 @@ def confirm_payment():
         return jsonify({"status": "error", "message": "Participant not found."}), 404
     
     participant = participant_req.data
-    uuid = participant.data.get("id")
+    uuid = participant.get("id")
     qr_img = qrcode.make(str(uuid))
     qr_img_bytes = io.BytesIO()
     qr_img.save(qr_img_bytes, format="PNG")
@@ -203,28 +203,28 @@ def confirm_payment():
     p.setFont("Helvetica-Bold", 12)
     p.drawString(70, y_pos, "Participant Details:")
     p.setFont("Helvetica", 12)
-    p.drawString(70, y_pos - 20, f"Name: {participant.data.get('name', 'N/A')}")
-    p.drawString(70, y_pos - 40, f"Email Id: {participant.data.get('email', 'N/A')}")
-    p.drawString(70, y_pos - 60, f"Phone Number: {participant.data.get('phone', 'N/A')}")
-    p.drawString(70, y_pos - 80, f"College Name: {participant.data.get('college', 'N/A')}")
+    p.drawString(70, y_pos - 20, f"Name: {participant.get('name', 'N/A')}")
+    p.drawString(70, y_pos - 40, f"Email Id: {participant.get('email', 'N/A')}")
+    p.drawString(70, y_pos - 60, f"Phone Number: {participant.get('phone', 'N/A')}")
+    p.drawString(70, y_pos - 80, f"College Name: {participant.get('college', 'N/A')}")
 
     # Events
     y_pos -= 120
     p.setFont("Helvetica-Bold", 12)
     p.drawString(70, y_pos, "Event Details:")
     p.setFont("Helvetica", 12)
-    events_list = [e['name'] for e in participant.data.get('selected_events', [])]
+    events_list = [e['name'] for e in participant.get('selected_events', [])]
     p.drawString(70, y_pos - 20, f"Events: {', '.join(events_list) or 'N/A'}")
-    p.drawString(70, y_pos - 40, f"Team Name: {participant.data.get('team_name', 'N/A')}")
-    p.drawString(70, y_pos - 60, f"Team Code: {participant.data.get('team_code', 'N/A')}")
-    p.drawString(70, y_pos - 80, f"Food Preference: {participant.data.get('food', 'N/A')}")
+    p.drawString(70, y_pos - 40, f"Team Name: {participant.get('team_name', 'N/A')}")
+    p.drawString(70, y_pos - 60, f"Team Code: {participant.get('team_code', 'N/A')}")
+    p.drawString(70, y_pos - 80, f"Food Preference: {participant.get('food', 'N/A')}")
 
     # Payment
     y_pos -= 120
     p.setFont("Helvetica-Bold", 12)
     p.drawString(70, y_pos, "Payment:")
     p.setFont("Helvetica", 12)
-    p.drawString(70, y_pos - 20, f"Amount Paid: ₹{participant.data.get('amount', 'N/A')}")
+    p.drawString(70, y_pos - 20, f"Amount Paid: ₹{participant.get('amount', 'N/A')}")
 
     # Date + Venue
     y_pos -= 60
