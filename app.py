@@ -165,8 +165,7 @@ def confirm_payment():
         return jsonify({"status": "error", "message": "Participant not found."}), 404
     
     participant = participant_req.data
-
-    uuid = participant.get("id")
+    uuid = participant.data.get("id")
     qr_img = qrcode.make(str(uuid))
     qr_img_bytes = io.BytesIO()
     qr_img.save(qr_img_bytes, format="PNG")
@@ -177,6 +176,7 @@ def confirm_payment():
     p = canvas.Canvas(pdf_bytes, pagesize=letter)
     width, height = letter
 
+    # White background
     p.setFillColor(colors.white)
     p.rect(0, 0, width, height, fill=1, stroke=0)
 
@@ -186,14 +186,62 @@ def confirm_payment():
     except Exception as e:
         print("⚠️ Crescent logo load failed:", e)
 
+    try:
+        wave_logo = url_to_imagereader("https://iprrqvqzztbftfxwyyxx.supabase.co/storage/v1/object/public/tickets/wavee.jpg")
+        p.drawImage(wave_logo, 0, 0, width=width, height=100, mask='auto')
+    except Exception as e:
+        print("⚠️ Wave design load failed:", e)
+
     p.setFillColor(colors.black)
     p.setFont("Helvetica-Bold", 18)
     p.drawCentredString(width / 2, height - 150, "Thank you for registering for ARCANE 2K25!")
-    # ... (rest of your PDF generation code is fine) ...
+    p.setFont("Helvetica", 14)
+    p.drawCentredString(width / 2, height - 170, "We're excited to have you onboard.")
+
+    # Participant Details
+    y_pos = height - 220
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(70, y_pos, "Participant Details:")
     p.setFont("Helvetica", 12)
-    p.drawString(70, height - 240, f"Name: {participant.get('name', 'N/A')}")
-    p.drawString(70, height - 260, f"Email Id: {participant.get('email', 'N/A')}")
+    p.drawString(70, y_pos - 20, f"Name: {participant.data.get('name', 'N/A')}")
+    p.drawString(70, y_pos - 40, f"Email Id: {participant.data.get('email', 'N/A')}")
+    p.drawString(70, y_pos - 60, f"Phone Number: {participant.data.get('phone', 'N/A')}")
+    p.drawString(70, y_pos - 80, f"College Name: {participant.data.get('college', 'N/A')}")
+
+    # Events
+    y_pos -= 120
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(70, y_pos, "Event Details:")
+    p.setFont("Helvetica", 12)
+    events_list = [e['name'] for e in participant.data.get('selected_events', [])]
+    p.drawString(70, y_pos - 20, f"Events: {', '.join(events_list) or 'N/A'}")
+    p.drawString(70, y_pos - 40, f"Team Name: {participant.data.get('team_name', 'N/A')}")
+    p.drawString(70, y_pos - 60, f"Team Code: {participant.data.get('team_code', 'N/A')}")
+    p.drawString(70, y_pos - 80, f"Food Preference: {participant.data.get('food', 'N/A')}")
+
+    # Payment
+    y_pos -= 120
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(70, y_pos, "Payment:")
+    p.setFont("Helvetica", 12)
+    p.drawString(70, y_pos - 20, f"Amount Paid: ₹{participant.data.get('amount', 'N/A')}")
+
+    # Date + Venue
+    y_pos -= 60
+    p.setFont("Times-Roman", 12)
+    p.drawString(70, y_pos, "Date: 16th October 2025")
+    p.drawString(70, y_pos - 20, "Venue: B.S. Abdur Rahman Crescent Institute of Science & Technology")
+
+    # Contact Info
+    y_pos -= 60
+    p.setFont("Helvetica-Bold", 10)
+    p.drawCentredString(width / 2, y_pos, "If you have any queries, contact us at:")
+    p.drawCentredString(width / 2, y_pos - 15, "arcane2k25@gmail.com")
+
+    # QR Code
     p.drawImage(ImageReader(qr_img_bytes), 70, 70, width=120, height=120)
+    p.setFont("Helvetica-Bold", 12)
+    p.drawCentredString(width / 2, 40, "@arcane2k25")
 
     p.save()
     pdf_bytes.seek(0)
